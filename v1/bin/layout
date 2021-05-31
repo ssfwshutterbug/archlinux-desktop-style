@@ -1,0 +1,22 @@
+#!/bin/bash
+# it is used to change xmonad layout, loose layout or compact layout
+
+
+[[ $# != 1 ]] && echo "one parameter needed!" && exit
+[[ $1 != "loose" && $1 != "compact" ]] && echo "layout must be loose or compact" && exit
+new_layout=$1
+old_layout=`ps a | grep polybar | grep -v grep | awk '{print $NF}'`
+
+if [[ $new_layout == "loose" && $old_layout != "looseLayout" ]];then
+    sed -i 's/compactLayout/looseLayout/' ~/.config/polybar/launch.sh
+    sed -i 's/spacingWithEdge 1/spacingWithEdge 6/' ~/.xmonad/xmonad.hs
+    sed -i 's/maximizeWithPadding 0/maximizeWithPadding 12/' ~/.xmonad/xmonad.hs
+    sh ~/.config/polybar/launch.sh
+    xmonad --recompile &>/dev/null && xmonad --restart
+elif [[ $new_layout == "compact" && $old_layout != "compactLayout" ]];then
+    sed -i 's/looseLayout/compactLayout/' ~/.config/polybar/launch.sh
+    sed -i 's/spacingWithEdge 6/spacingWithEdge 1/' ~/.xmonad/xmonad.hs
+    sed -i 's/maximizeWithPadding 12/maximizeWithPadding 0/' ~/.xmonad/xmonad.hs
+    sh ~/.config/polybar/launch.sh
+    xmonad --recompile &>/dev/null && xmonad --restart
+fi

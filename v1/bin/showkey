@@ -1,0 +1,19 @@
+#!/bin/bash
+#                              _              
+# ___  ___ _ __ ___  ___ _ __ | | _____ _   _ 
+#/ __|/ __| '__/ _ \/ _ \ '_ \| |/ / _ \ | | |
+#\__ \ (__| | |  __/  __/ | | |   <  __/ |_| |
+#|___/\___|_|  \___|\___|_| |_|_|\_\___|\__, |
+#                                       |___/ 
+
+if ps -ef | grep screenkey | grep -v grep ;then
+    pkill screenkey
+    notify-desktop -t 1000 "screenkey off"
+else
+    screenkey -g 300x1180 --no-systray -s small &>/dev/null &
+    notify-desktop -t 1000 "screenkey on"
+fi
+
+
+
+

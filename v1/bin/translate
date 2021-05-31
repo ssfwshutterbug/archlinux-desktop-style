@@ -1,0 +1,18 @@
+#!/bin/bash
+# _                       _       _       
+#| |_ _ __ __ _ _ __  ___| | __ _| |_ ___ 
+#| __| '__/ _` | '_ \/ __| |/ _` | __/ _ \
+#| |_| | | (_| | | | \__ \ | (_| | ||  __/
+# \__|_|  \__,_|_| |_|___/_|\__,_|\__\___|
+
+mplayer ~/Public/sound/ding.wav &
+
+# remove line ending, join multi line into one line
+sentense=`echo ${@} | tr -d '\n'`
+
+# read words online
+mplayer http://dict.youdao.com/dictvoice\?audio\="${sentense}" &>/dev/null  &
+
+# translate words
+ydcv -n -t 5 "$sentense"
+

@@ -1,1 +1,40 @@
+#!/bin/bash
+#               _ _                             
+#__      ____ _| | |_ __   __ _ _ __   ___ _ __ 
+#\ \ /\ / / _` | | | '_ \ / _` | '_ \ / _ \ '__|
+# \ V  V / (_| | | | |_) | (_| | |_) |  __/ |   
+#  \_/\_/ \__,_|_|_| .__/ \__,_| .__/ \___|_|   
+#                  |_|         |_|              
+
+if [[ $# == 1 && $1 == "dynamic" || $# == 2 && $1 == "static" && -f $2 ]];then
+    method=$1
+    location=${2:-""}
+else
+    echo "parameter error! try 'static /picture/location' or 'dynamic'"
+    exit 1
+fi
+
+function set_bg(){
+    style=$1
+    if [[ $style == "dynamic" ]];then
+        while :
+        do
+            feh -D 1 -z --bg-scale ~/Pictures/gallery
+            sleep 180
+        done
+    elif [[ $style == "static" ]];then
+        feh --bg-scale $2
+    fi
+} 
+
+function exist_check(){
+    if [[ `ps -ef | grep wallpaper | grep -v grep | wc -l` -gt 2 ]];then
+        kill `ps -ef | grep wallpaper | head -1 | awk '{print $2}'`
+    fi
+}
+
+exec 1>/dev/null
+exist_check
+set_bg $method $location
+
 

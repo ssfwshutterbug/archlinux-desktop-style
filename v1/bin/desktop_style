@@ -1,0 +1,97 @@
+#!/bin/bash
+######################################################################################
+#                 this script is used to change desktop styple                       #
+# roundCorner:   will render app with round corner with no top bar                   #
+# topBar:        will render app with top bar with no round corner                   #
+######################################################################################
+
+
+# check parameter
+[[ $# == 0 || $1 != "roundCorner" && $1 != "topBar" ]] && echo "usage: desktop_style topBar/roundCorner" && exit 1
+
+# define variables
+style=$1
+Xresources_conf=~/.Xresources
+picom_conf=~/.config/picom/picom.conf
+xmonad_conf=~/.xmonad/xmonad.hs
+
+# function to start polybar
+function start_polybar(){
+    # Terminate already running bar instances
+    if pgrep polybar &>/dev/null;then
+        killall -q polybar 
+        rm /tmp/polybar*
+    fi
+
+    # Wait until the processes have been shut down
+    while pgrep -u $UID -x polybar >/dev/null; do sleep 0.5; done
+
+    # start polybar
+    polybar -r -q looseLayout &
+}
+
+# function to start picom
+function start_picom(){
+    if ! pgrep picom &>/dev/null;then
+        picom --config $picom_conf -b 
+    else
+        pkill picom
+        sleep 0.5
+        picom --config $picom_conf -b 
+    fi
+}
+
+if [[ $style == "roundCorner" ]];then
+    # modify xterm configure
+    if grep 'XTerm\*scrollBar: false' $Xresources_conf &>/dev/null;then
+        sed -i 's/XTerm\*scrollBar: false/XTerm\*scrollBar: true/' $Xresources_conf && xrdb $Xresources_conf
+    fi
+
+    # modify picom configure
+    if sed -n '432,$p' $picom_conf | egrep '^#' &>/dev/null;then
+        sed -i '432,$s/#//' $picom_conf 
+        start_picom
+    fi
+
+    # modify xmonad configure
+    if ! grep '\-\- $  noFrillsDeco' $xmonad_conf &>/dev/null;then 
+        sed -i 's/$  noFrillsDeco/-- $  noFrillsDeco/' $xmonad_conf 
+    fi
+    if ! grep '\-\- $  addTabs' $xmonad_conf &>/dev/null;then 
+        sed -i 's/$  addTabs/-- $  addTabs/' $xmonad_conf 
+    fi
+
+    if grep '\-\- $  noFrillsDeco' $xmonad_conf &>/dev/null || grep '\-\- $  addTabs' $xmonad_conf &>/dev/null;then 
+        xmonad --recompile &>/dev/null && xmonad --restart
+    fi
+
+    start_polybar
+fi
+
+if [[ $style == "topBar" ]];then
+    # modify xterm configure
+    if grep 'XTerm\*scrollBar: true' $Xresources_conf &>/dev/null;then
+        sed -i 's/XTerm\*scrollBar: true/XTerm\*scrollBar: false/' $Xresources_conf && xrdb ~/.Xresources
+    fi
+
+    # modify picom configure
+    if ! sed -n  '432,$p' $picom_conf | egrep '^#' &>/dev/null;then
+        sed -i '432,$s/^/#/' $picom_conf
+        start_picom
+    fi
+
+    # modify xmonad configure
+    if grep '\-\- $  noFrillsDeco' $xmonad_conf &>/dev/null;then
+        sed -i 's/-- $  noFrillsDeco/$  noFrillsDeco/' $xmonad_conf
+    fi
+    if grep '\-\- $  addTabs' $xmonad_conf &>/dev/null;then 
+        sed -i 's/-- $  addTabs/$  addTabs/' $xmonad_conf 
+    fi 
+
+    if ! grep '\-\- $  noFrillsDeco' $xmonad_conf &>/dev/null || ! grep '\-\- $  addTabs' $xmonad_conf &>/dev/null;then 
+        xmonad --recompile && xmonad --restart
+    fi
+
+    start_polybar
+fi
+dunstify "the style of desktop now is $style!"

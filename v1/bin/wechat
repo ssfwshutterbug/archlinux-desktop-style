@@ -1,0 +1,31 @@
+#!/bin/bash
+
+
+if ! sudo docker images|grep wechat &>/dev/null;then
+    sudo docker pull bestwu/wechat
+else
+    echo "docker images ready!"
+fi
+
+if ! sudo docker ps -a|grep wechat &>/dev/null;then
+    docker run -d --name wechat \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v $HOME/.cache:/WeChatFiles \
+    -e DISPLAY=unix$DISPLAY \
+    -e XMODIFIERS=@im=fcitx5 \
+    -e QT_IM_MODULE=fcitx5 \
+    -e GTK_IM_MODULE=fcitx5 \
+    -e AUDIO_GID=`getent group audio | cut -d: -f3` \
+    -e GID=`id -g` \
+    -e UID=`id -u` \
+    bestwu/wechat
+else
+    echo "wechat container ready!"
+fi
+
+xhost + &>/dev/null &
+if [ ! -f /usr/lib/gsd-xsettings ];then
+    pacman -S gnome-settings-daemon
+fi
+/usr/lib/gsd-xsettings &>/dev/null &
+sudo docker start wechat && echo "wechat starting!"
