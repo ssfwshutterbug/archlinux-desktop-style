@@ -1,1 +1,27 @@
+Config { font    = "xft:CaskaydiaCove Nerd Font Mono:pixelsize=14"
+       , bgColor = "#282c34"
+       , fgColor = "#ff6c6b"
+       , position = Static { xpos = 0, ypos = 0, width = 2560, height = 26 }
+       , lowerOnStart = True
+       , hideOnStart = False
+       , allDesktops = True
+       , persistent = True
+       , commands = [
+                      Run Date " %H:%M " "datet" 50
+                    , Run Date "<fn=1>\xf133</fn>  %B %d %Y " "dated" 50
+                    , Run Network "enp37s0" ["-t", "<fn=1>\xf0ab</fn>  <rx>kb  <fn=1>\xf0aa</fn>  <tx>kb"] 20
+                    , Run Cpu ["-t", "<fn=1>\xf108</fn>  cpu: (<total>%)","-H","50","--high","red"] 20
+                    , Run Memory ["-t", "<fn=1>\xf233</fn>  mem: <used>M (<usedratio>%)"] 20
+                    , Run DiskU [("/home", "<fn=1>\xf0c7</fn>  home: <free> free")] [] 60
+                    , Run DiskIO [("/", "<readvbar>  <writevbar>")] [] 3
+                    , Run MultiCoreTemp ["-t", "<avg>°C", "-hwmonitor-path", "/sys/module/k10temp/drivers/pci:k10temp/0000:00:18.3/hwmon/hwmon1/temp1_input"] 50
+                    , Run Com "/home/healer/.config/xmobar/update" [] "pacupdate" 36000
+                    , Run Com "uname" ["-r"] "" 3600
+                    , Run Com "/home/healer/.config/xmobar/vol" [] "pamixer" 2
+                    , Run UnsafeStdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "<fc=#5e94af>  <fn=1></fn> %pacupdate% </fc><fc=#666666> |</fc> %UnsafeStdinReader% } <fc=#cccccc>%datet%</fc> {<fc=#8B4513> %diskio% </fc><fc=#666666> |</fc> <fc=#6a84ea> %enp37s0% </fc><fc=#666666> |</fc> <fc=#7b68ee> <fn=1></fn> %pamixer% </fc><fc=#666666> |</fc> <fc=#6495ED> <fn=1></fn> %multicoretemp% </fc><fc=#666666> |</fc>  <fc=#94a0c1> %cpu% </fc><fc=#666666> |</fc> <fc=#aa718f> %memory% </fc><fc=#666666> |</fc> <fc=#98a18e> %disku% </fc><fc=#666666> |</fc> <fc=#5291c3> %dated%</fc><fc=#666666></fc>"
+       }
 
