@@ -1,0 +1,12 @@
+clear mod4
+clear lock
+
+! exchagnge super and caps_lock
+keycode 66 = Super_L
+keycode 133 = Caps_Lock
+
+add lock = Caps_Lock
+add mod4 = Super_L
+
+! change right alt to escape
+keycode 108 = Escape

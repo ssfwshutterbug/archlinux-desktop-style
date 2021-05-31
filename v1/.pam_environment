@@ -1,0 +1,13 @@
+# environment variable for fcitx
+INPUT_METHOD  DEFAULT=fcitx5
+GTK_IM_MODULE DEFAULT=fcitx5
+QT_IM_MODULE  DEFAULT=fcitx5
+XMODIFIERS    DEFAULT=\@im=fcitx5
+
+# environment variable to set xdg base directory
+XDG_CONFIG_HOME=/home/healer/.config
+XDG_CACHE_HOME=/home/healer/.cache
+XDG_DATA_HOME=/home/healer/.local/share
+XDG_DATA_DIRS=/usr/local/share:/usr/share
+XDG_CONFIG_DIRS=/etc/xdg
+

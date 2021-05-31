@@ -1,0 +1,145 @@
+! scroll
+XTerm*saveLines: 1000
+XTerm*scrollBar: false
+XTerm*leftScrollBar: true
+XTerm*scrollbar.thickness: 4
+XTerm*scrollbar.background: #417df1 
+XTerm*scrollbar.foreground: #f3715c
+
+
+
+! white space around
+XTerm*internalBorder: 8
+! use ctrl+v to paste selection
+XTerm*selectToClipboard: true
+
+! cursor
+Xcursor.theme: Vimix-cursors
+Xcursor.size: 16
+XTerm*cursorBlink: true
+XTerm*cursorUnderLine: true
+XTerm*cursorColor: #4169e1
+
+
+! font
+!XTerm*faceName: Iosevka
+XTerm*faceName: CaskaydiaCove Nerd Font Mono:style=Book
+!XTerm*faceName: RobotoMono Nerd Font Mono:style=Regular
+!XTerm*faceName: SauceCodePro Nerd Font:style=Regular
+XTerm*faceSize: 16
+XTerm*scaleHeight: 1.2
+
+! terminal canot show chinese even though set utf8 with locale.
+! but blow settings making it shows correctly
+!XTerm*locale: false
+XTerm*utf8: true
+
+! bell
+XTerm.vt100.bellIsUrgent: true
+
+! disable underlined text, instead color it
+XTerm.vt100.colorULMode: true
+XTerm.vt100.colorUL: #78cdd1
+
+
+! disable bold font faces, use color instead
+XTerm.vt100.colorBDMode: true
+XTerm.vt100.colorBD: #6766a9
+
+! keybind: adjust-font-size click-action use-clipboard open-url scroll-page
+XTerm*VT100.Translations: #override \n\
+Ctrl <Key> minus: smaller-vt-font() \n\
+Ctrl <Key> plus: larger-vt-font() \n\
+Ctrl <Key> 0: set-vt-font(d) \n\
+<Btn1Up>: select-end(CLIPBOARD,PRIMARY,CUT_BUFFER0) \n\
+<Btn3Down>: insert-selection(CLIPBOARD,PRIMARY,CUT_BUFFER0) \n\
+Shift Ctrl <Key> C: copy-selection(CLIPBOARD,PRIMARY,CUT_BUFFER0) \n\
+Shift Ctrl <Key> V: insert-selection(CLIPBOARD,PRIMARY,CUT_BUFFER0) \n\
+Ctrl <Btn1Down>: exec-formatted("xdg-open '%t'", CLIPBOARD) \n\
+<KeyPress> Home : scroll-to(begin) \n\
+<KeyPress> End  : scroll-to(end) 
+
+! italic color
+XTerm*colorITMode: true
+XTerm*colorIT: #78cdd1
+
+!! define color
+!*.foreground: #bdced0
+!!*.background: #1d1f20
+!*.background: #1C2B40
+!*.color0:     #000000
+!*.color8:     #767676
+!*.color1:     #C4A000
+!*.color9:     #FCE94F
+!*.color2:     #d7989e
+!*.color10:    #f173ac
+!*.color3:     #4bd129  
+!*.color11:    #8bd129
+!*.color4:     #4e72b8
+!*.color12:    #80aecb
+!*.color5:     #75507B
+!*.color13:    #AD7FA8
+!*.color6:     #76becc
+!*.color14:    #29d1cc
+!*.color7:     #dddddd
+!*.color15:    #ffffff
+
+! like themes
+*.foreground: #bdced0
+!*.background: #1C2B40
+*.background: #282A36
+*.color0:     #000000
+*.color8:     #767676
+*.color1:     #FF5555
+*.color9:     #FF6E67
+*.color2:     #50FA7B
+*.color10:    #5AF78E
+*.color3:     #4bd129  
+*.color11:    #8bd129
+*.color4:     #4e72b8
+*.color12:    #80aecb
+*.color5:     #75507B
+*.color13:    #AD7FA8
+*.color6:     #76becc
+*.color14:    #29d1cc
+*.color7:     #dddddd
+*.color15:    #ffffff
+
+!monokai
+!*.color0=:1C1D19
+!*.color1=:D01B24
+!*.color2=:A7D32C
+!*.color3=:D8CF67
+!*.color4=:61B8D0
+!*.color5=:695ABB
+!*.color6=:D53864
+!*.color7=:FEFFFE
+!*.color8=:1C1D19
+!*.color9=:D12A24
+!*.color10=:A7D32C
+!*.color11=:D8CF67
+!*.color12=:61B8D0
+!*.color13=:695ABB
+!*.color14=:D53864
+!*.color15=:FEFFFE
+
+!! Dracula Xresources palette
+!*.foreground: #F8F8F2
+!*.background: #282A36
+!*.color0:     #000000
+!*.color8:     #4D4D4D
+!*.color1:     #FF5555
+!*.color9:     #FF6E67
+!*.color2:     #50FA7B
+!*.color10:    #5AF78E
+!*.color3:     #F1FA8C
+!*.color11:    #F4F99D
+!*.color4:     #BD93F9
+!*.color12:    #CAA9FA
+!*.color5:     #FF79C6
+!*.color13:    #FF92D0
+!*.color6:     #8BE9FD
+!*.color14:    #9AEDFE
+!*.color7:     #BFBFBF
+!*.color15:    #E6E6E6
+

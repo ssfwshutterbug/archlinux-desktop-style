@@ -1,0 +1,3 @@
+GO111MODULE=on
+GOPATH=/home/healer/Public/code/go
+GOPROXY=https://goproxy.io,direct
