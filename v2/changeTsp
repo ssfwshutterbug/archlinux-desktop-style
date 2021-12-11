@@ -1,0 +1,25 @@
+#!/bin/bash
+
+
+# parameter check
+[[ $# != 1 || $1 == "+" && $1 == "-" ]] && exit 1
+
+# get app name
+currentApp=$(xdotool getwindowfocus getwindowclassname)
+app=$(yad --entry --timeout=5 --center --fixed --title='change app transparence' --entry-label="App name:" --entry-text="$currentApp" --buttons-layout=edge)
+[[ $app == "" ]] && exit 1
+
+# search app line
+ori=$(rg -w $app ~/.config/picom/picom.conf |rg -v '#' |rg -woP '\d+')
+[[ `echo $ori|wc -w` != 1 || $ori == "" ]] && dunstify -u critical "cannot find $app configuration in picom.conf, pls add it manually!" && exit 1
+line=$(rg -wn $app ~/.config/picom/picom.conf |rg -v '#' |cut -d: -f1)
+
+# calculate new transparence
+[ $1 == "+" ] && new=$((ori+6))
+[ $1 == "-" ] && new=$((ori-6))
+
+# change picom settings
+if [[ $new -gt 0 && $new -le 100 ]];then
+    sed -i "${line}s/${ori}/${new}/" ~/.config/picom/picom.conf
+    dunstify "now the $app's transparence has been changed to $new!"
+fi
