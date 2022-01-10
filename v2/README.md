@@ -20,7 +20,7 @@
       " > ~/.config/nvim/init.vim
       
 4. 个人主题配置
-        我的vim原本有一些自定义的颜色，但是使用nvim后这些配置不生效了，可以在nvim的配置文件中添加以下语句让自定义的颜色生效
+   我的vim原本有一些自定义的颜色，但是使用nvim后这些配置不生效了，可以在nvim的配置文件中添加以下语句让自定义的颜色生效
    set termguicolors
    set cul
    hi CursorLine guibg=#171717 guifg=None
