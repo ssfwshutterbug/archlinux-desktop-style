@@ -55,7 +55,7 @@ in order to make all keyboard shortcuts make effect, the software/scripts need t
 import System.IO
 import Control.Monad (forM_, join)
 
-import XMonad ---hiding ( (|||) ) --layout split with |||
+import XMonad -- hiding ( (|||) ) --layout split with |||
 
 import Data.List (sortBy)
 import Data.Function (on)
@@ -91,6 +91,7 @@ import XMonad.Actions.Submap  --create a sub-mapping of key bindings
 import XMonad.Actions.CycleWS  --move/cycle windows between workspaces
 import XMonad.Actions.FloatSnap --Move and resize floating windows using other windows and the edge of the screen as guidelines. amazing
 
+import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.Spacing   --set edge space of window
 import XMonad.Layout.NoBorders    --used in fullscreen
 import XMonad.Layout.Maximize  --toggle fullscreen
@@ -161,34 +162,28 @@ myLogHook xmproc = dynamicLogWithPP . filterOutWsPP [scratchpadWorkspaceTag] $ x
     , ppTitle           = xmobarColor "#171d35" "#c1c5c5" . shorten' " " 60 . wrap " " (take 60 $ cycle " ")
     , ppLayout          = xmobarColor "#c1c5c5" "" . shorten 10
     , ppSep             = " "
-    , ppOrder           = \(ws:_:t:_) -> [t] ++ [ws]
+    , ppOrder           = \(ws:_:t:_) -> [t] ++ [ws] -- ++ [l]
     }
 
 -- layout style
 myLayoutHook = windowNavigation
-            $  maximizeWithPadding 0
-            $  borderResize
-            $  onWorkspace " 9 " (spacingWithEdge 0 $ noBorders Full)
-            $  noFrillsDeco shrinkText topBarTheme
-            $  addTabs shrinkText myTabTheme
+            $ maximizeWithPadding 0
+            $ borderResize
+            $ onWorkspace " 9 " (spacingWithEdge 0 $ noBorders Full)
+            $ noFrillsDeco shrinkText topBarTheme
+            $ addTabs shrinkText myTabTheme
             -- $  myDecorate
-            $  subLayout [0,1,2] (Simplest)
-            $  spacingRaw False (Border 16 0 10 10) True (Border 4 0 12 12) True -- top bottom right left
+            $ subLayout [0,1,2] (Simplest)
+            $ spacingRaw False (Border 16 0 10 10) True (Border 4 0 12 12) True -- top bottom right left
             $  mkToggle (single MIRROR)
-            $  mkToggle (single ACCORDION)
-            $  mkToggle (single CROSS)
-            $  mkToggle (single PST)
-            $  mkToggle (single THREE)
-            $  mkToggle (single ONE)
-            $  mkToggle (single RT)
             -- $  IfMax 3 (IfMax 1 rh tiled) Grid  --- ||| tiled
-            $  Accordion -- default when startup
+            $ smt ||| three ||| Grid ||| Accordion ||| simpleCross ||| positionStoreFloat ||| oB
             where 
-            -- with smartBorder, it will render no border while there is only one window in a workspace
-                rh          = resizeHorizontal 600 $ resizeHorizontalRight 600 $ smt_t
-                smt_t       = smartBorders (ResizableTall 1 (1/100) 0.5 [])
-                tiled       = ResizableTall 1 (1/100) 0.6 [] 
+                rh          = resizeHorizontal 600 $ resizeHorizontalRight 600 $ smt
+                smt         = smartBorders (ResizableTall 1 (1/100) 0.6 [])
+                rt          = ResizableTall 1 (1/100) 0.6 [] 
                 three		= ThreeColMid 1 (3/100) (1/2)
+                oB          = OneBig (3/4) (3/4)
 
 -- startup app when xmonad starts
 myStartupHook :: X ()
@@ -201,23 +196,6 @@ myStartupHook = do
     spawnOnce "dunst &"
     --spawnOnce "oneko -bg white -fg black -tofocus &"
     --spawnOnce "xautolock -time 180 -locker 'systemctl suspend' -detectsleep"
-
-
--- self define toggle layout transformer
-data MyTransformer = ACCORDION
-                | CROSS
-                | PST
-                | THREE
-                | ONE
-                | RT
-            deriving (Read, Show, Eq)
-instance Transformer MyTransformer Window where
-    transform ACCORDION x k = k Accordion (const x)
-    transform CROSS x k = k simpleCross (const x)
-    transform PST x k = k positionStoreFloat (const x)
-    transform THREE x k = k (ThreeColMid 1 (3/100) (1/2)) (const x)
-    transform ONE x k = k (OneBig (3/4) (3/4)) (const x)
-    transform RT x k = k (ResizableTall 1 (1/100) 0.6 []) (const x)
 
 -- limit windows force down, let pop window float in front of others.
 myManageHook = composeOne 
@@ -316,15 +294,16 @@ myKeys =
 	   , ((0 , xK_d), killAllOtherCopies) -- kill all copied windows
        ])
 
--- sub key "'" toggle layout
+-- sub key "'" toggle/jump layout
     , ((_M4 , xK_apostrophe), submap . M.fromList $
        [ ((0 , xK_m), sendMessage $ Toggle MIRROR)
-       , ((0 , xK_a), sendMessage $ Toggle ACCORDION)
-       , ((0 , xK_c), sendMessage $ Toggle CROSS)
-       , ((0 , xK_p), sendMessage $ Toggle PST)
-       , ((0 , xK_t), sendMessage $ Toggle THREE)
-       , ((0 , xK_o), sendMessage $ Toggle ONE)
-       , ((0 , xK_r), sendMessage $ Toggle RT)
+       , ((0 , xK_a), sendMessage $ JumpToLayout "Accordion")
+       , ((0 , xK_c), sendMessage $ JumpToLayout "Cross")
+       , ((0 , xK_p), sendMessage $ JumpToLayout "PSF")
+       , ((0 , xK_t), sendMessage $ JumpToLayout "ThreeCol")
+       , ((0 , xK_o), sendMessage $ JumpToLayout "OneBig 0.75 0.75")
+       , ((0 , xK_r), sendMessage $ JumpToLayout "ResizableTall")
+       , ((0 , xK_g), sendMessage $ JumpToLayout "Grid")
        ])
 
 -- scratchpad key
