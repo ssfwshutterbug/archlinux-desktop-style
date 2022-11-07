@@ -53,6 +53,7 @@ in order to make all keyboard shortcuts make effect, the software/scripts need t
     » #dm-kvm               choose kvm image to start
     » #dm-rotate-screen     rotate screen
     » #dm-search-in-firefox search engine and bookmark
+    » #dm-run               quick search history command and execute
 
 -}
 --}}}
@@ -269,7 +270,7 @@ myKeys =
     , ((_M4, xK_n), spawn myTerminal)  -- new terminal
     , ((_M4, xK_t), spawn "translate \"`xclip -sel clip -o`\"") -- translate copied word/sentence
     , ((_M4, xK_y), spawn "dm-translate") -- use dmenu to type what need to be translated
-    , ((_M4 ,xK_r), spawn "~/.config/rofi/launchers/type-3/launcher.sh")  -- launcher rofi
+    , ((_M4 ,xK_r), spawn "dm-run")  -- dmenu quick choose history command and execute
     , ((_M4 ,xK_s), spawn "dm-rotate-screen")  -- use dmenu to choose screen rotation
     , ((_M4, xK_u), spawn "dm-search-in-firefox") -- use dmenu to search in browser
     , ((_M4, xK_e), spawn "dm-kvm") -- use dmenu to choose kvm image to start
@@ -281,6 +282,7 @@ myKeys =
        [ ((0 , xK_k), spawn "showkey") -- toggle screen key program on or off
        , ((0 , xK_l), spawn "slock & systemctl suspend")  -- lock screen
        , ((0 , xK_w), spawn "wallpaper dynamic &")  -- change wallpaper
+       , ((0 , xK_r), spawn "~/.config/rofi/launchers/type-3/launcher.sh")  -- launcher rofi
        , ((0 , xK_s), toggleScreenSpacingEnabled >> toggleWindowSpacingEnabled) -- toggle space (put two functions in one line execute at the same time that's cool)
        , ((0 , xK_slash), withFocused $ toggleDynamicNSP "dyn1") -- toggle current window to a scratchpad
        , ((0 , xK_BackSpace), killAll) -- kill all windows in current workspace
