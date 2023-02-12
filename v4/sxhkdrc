@@ -1,0 +1,39 @@
+F1
+	new-translate $( xclip -o -sel clip )
+	
+super + F1
+	dst-brightness - 5
+
+super + F2
+	dst-brightness + 5
+
+super + F3
+	dunstctl history-pop
+
+super + F4
+	dunstctl close-all
+
+super + F5
+	change-transparency -
+
+super + F6
+	change-transparency +
+
+super + F11
+	dwm-amixer -
+	
+super + F12
+	dwm-amixer +
+
+Print
+	flameshot gui
+
+super + o ; w
+	sxiv -rt "$HOME/public/picture/background"
+
+super + o ; {f}
+	{firefox-bin}
+
+super + apostrophe
+	dm-item
+
