@@ -1,0 +1,65 @@
+#!/bin/dash
+
+COLORS="$HOME/.local/share/colors"
+HEXODIR="$HOME/public/myweb/source/_posts"
+SOURCEDIR="$HOME/public/note"
+UPDATED=""
+NEW=""
+HEXO="$HOME/.local/share/npm/bin/hexo"
+
+# function for output info
+. $COLORS
+INFO () {
+	echo "* $@"
+}
+
+GetInfoFromInput () {
+	echo "${Brown}category: ${End}"
+	read category
+	echo "${Brown}tag: ${End}"
+	read tag
+}
+
+# check dir exists or not 
+[ -d $HEXODIR ] || (INFO "$HEXODIR ${Red}doesn't exist${End}" && exit 0)
+[ -d $SOURCEDIR ] || (INFO "$SOURCEDIR ${Red}doesn't exist${End}" && exit 0)
+[ -f $hexo ] || (INFO "$command hexo ${Red}doesn't exist${End}" && exit 0)
+
+# find note file and create a temp file
+source_file=$(fd . --type file $SOURCEDIR |rg -v "README.md")
+tmpfile=$(mktemp) || exit 
+trap "rm -rf $tmpfile" exit
+
+for sfile in $source_file
+do 
+	filename=$(echo $sfile |awk -F'/' '{print $NF}')
+	hexo_file="$HEXODIR/$filename"
+
+	# if file exists and has some changes, then update file.
+	[ -f $hexo_file ] && {
+		sed -n '7,$p' $hexo_file > $tmpfile
+		diff $tmpfile $sfile >/dev/null || {
+			sed -i '7,$d' $hexo_file
+			cat $sfile >> $hexo_file
+			UPDATED="$UPDATED $filename"
+		}
+	} || {
+	# if file not exists, then add new hexo file
+		filename=$(echo $filename |cut -d'.' -f1)
+		cd $HEXODIR && $HEXO n $filename
+		GetInfoFromInput
+		sed -i "s/categories:/categories: $category/" $hexo_file
+		sed -i "s/tags:/tags: $tag/" $hexo_file
+		cat $sfile >> $hexo_file
+		NEW="$NEW $filename"
+	}
+done
+
+# print useful information
+[ -z "$UPDATED" ] || INFO "those files have been updated: \n\
+${Green}$(echo $UPDATED |xargs -n1)${End}"
+
+[ -z "$NEW" ] || INFO "new to added: \n\
+${Green}$(echo $NEW |xargs -n1)${End}"
+
+INFO "finished!"
