@@ -1,0 +1,21 @@
+#!/bin/bash
+#                              _              
+# ___  ___ _ __ ___  ___ _ __ | | _____ _   _ 
+#/ __|/ __| '__/ _ \/ _ \ '_ \| |/ / _ \ | | |
+#\__ \ (__| | |  __/  __/ | | |   <  __/ |_| |
+#|___/\___|_|  \___|\___|_| |_|_|\_\___|\__, |
+#                                       |___/ 
+
+if pgrep screenkey >/dev/null; then
+    pkill screenkey
+    notify-send -t 1000 "screenkey off"
+else
+    screenkey --no-systray \
+            --font-size small \
+            --mouse &>/dev/null &
+    notify-send -t 1000 "screenkey on"
+fi
+
+
+
+

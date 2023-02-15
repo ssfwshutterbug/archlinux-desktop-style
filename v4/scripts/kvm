@@ -1,0 +1,13 @@
+#!/bin/bash
+
+img=${1}
+img_path=~/public/kvm/images/${img}
+
+qemu-system-x86_64 -drive file=${img_path} \
+-enable-kvm \
+-cpu host -smp 4 \
+-m 6G \
+-vga virtio \
+-display gtk,gl=on,full-screen=on \
+-device intel-hda \
+-device hda-duplex

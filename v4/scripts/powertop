@@ -1,0 +1,45 @@
+#!/bin/bash
+# 使用powertop产生的报告，来优化电源的使用
+
+#VM writeback timeout  
+echo '1500' > '/proc/sys/vm/dirty_writeback_centisecs';
+#Enable Audio codec power management  
+echo '1' > '/sys/module/snd_hda_intel/parameters/power_save';
+#NMI watchdog should be turned off  
+echo '0' > '/proc/sys/kernel/nmi_watchdog';
+#Runtime PM for I2C Adapter i2c-12 (i915 gmbus dpd)  
+echo 'auto' > '/sys/bus/i2c/devices/i2c-12/device/power/control';
+#Runtime PM for I2C Adapter i2c-9 (i915 gmbus dpb)  
+echo 'auto' > '/sys/bus/i2c/devices/i2c-9/device/power/control';
+#Runtime PM for I2C Adapter i2c-10 (i915 gmbus dpc)  
+echo 'auto' > '/sys/bus/i2c/devices/i2c-10/device/power/control';
+#Runtime PM for I2C Adapter i2c-11 (i915 gmbus misc)  
+echo 'auto' > '/sys/bus/i2c/devices/i2c-11/device/power/control';
+#Autosuspend for USB device Flash Card Reader/Writer [Generic]  
+echo 'auto' > '/sys/bus/usb/devices/1-4/power/control';
+
+#Autosuspend for USB device USB Receiver [Logitech]  这一项不优化，否则鼠标一会不使用就会自动停止对usb供电
+#echo 'auto' > '/sys/bus/usb/devices/1-1/power/control';
+
+#Runtime PM for PCI Device Intel Corporation SSD 660P Series  
+echo 'auto' > '/sys/bus/pci/devices/0000:04:00.0/power/control';
+#Runtime PM for PCI Device Intel Corporation Cannon Point-LP PCI Express Root Port #9  
+echo 'auto' > '/sys/bus/pci/devices/0000:00:1d.0/power/control';
+#Runtime PM for PCI Device Intel Corporation Cannon Point-LP SPI Controller  
+echo 'auto' > '/sys/bus/pci/devices/0000:00:1f.5/power/control';
+#Runtime PM for PCI Device Intel Corporation Cannon Point-LP High Definition Audio Controller  
+echo 'auto' > '/sys/bus/pci/devices/0000:00:1f.3/power/control';
+#Runtime PM for PCI Device Intel Corporation Cannon Point-LP Shared SRAM  
+echo 'auto' > '/sys/bus/pci/devices/0000:00:14.2/power/control';
+#Runtime PM for PCI Device Intel Corporation Cannon Point-LP CNVi [Wireless-AC]  
+echo 'auto' > '/sys/bus/pci/devices/0000:00:14.3/power/control';
+#Runtime PM for PCI Device Intel Corporation Cannon Point-LP LPC Controller  
+echo 'auto' > '/sys/bus/pci/devices/0000:00:1f.0/power/control';
+#Runtime PM for PCI Device Intel Corporation UHD Graphics 620 (Whiskey Lake)  
+echo 'auto' > '/sys/bus/pci/devices/0000:00:02.0/power/control';
+#Runtime PM for PCI Device Intel Corporation Coffee Lake HOST and DRAM Controller  
+echo 'auto' > '/sys/bus/pci/devices/0000:00:00.0/power/control';
+#Runtime PM for disk sda  
+echo 'auto' > '/sys/block/sda/device/power/control';
+#Runtime PM for PCI Device Intel Corporation Cannon Point-LP Thermal Controller  
+echo 'auto' > '/sys/bus/pci/devices/0000:00:12.0/power/control'; 

@@ -1,0 +1,109 @@
+#!/bin/bash
+#               _ _                             
+#__      ____ _| | |_ __   __ _ _ __   ___ _ __ 
+#\ \ /\ / / _` | | | '_ \ / _` | '_ \ / _ \ '__|
+# \ V  V / (_| | | | |_) | (_| | |_) |  __/ |   
+#  \_/\_/ \__,_|_|_| .__/ \__,_| .__/ \___|_|   
+#                  |_|         |_|              
+
+
+# specify download tmp location
+tmp_dir="/tmp"
+# sepcify store location
+default_dir="${HOME}/public/pictures/background"
+# specify default picture local dir
+default_pic="${HOME}/public/pictures/background/splash.png"
+# specify bing image gallery api
+api="https://cn.bing.com/hp/api/v1/imagegallery?format=json"
+# specify dynamic change time
+dynamic_time="600"
+
+
+# save args
+method=${1:-""}
+location=${2:-""}
+download_or_not=${3:-""}
+
+# function for sure no backend exists
+function no_backend(){
+    [[ `ps -ef | grep wallpaper | grep -v grep | wc -l` -gt 2 ]] && {
+        kill `ps -ef | grep wallpaper | head -1 | awk '{print $2}'`
+    } 
+}
+
+# function for notify
+function notify(){
+    info=$@
+    notify-send "${info}"
+}
+
+# function for setting static wallpaper
+function static_bg(){
+    [[ -f ${location} ]] && feh --no-fehbg --bg-scale ${location} || {
+        feh --no-fehbg --bg-scale ${default_pic}
+        notify "wrong picture path!" 
+    }
+}
+
+# function for setting dynamic wallpaper
+function dynamic_bg(){
+    {
+        while :
+        do
+            [[ -d ${location} ]] && feh --no-fehbg -D 1 -z --bg-scale ${location} || {
+                static_bg ${default_pic}
+                notify "no specify directory or wrong path!"
+            }
+            sleep ${dynamic_time}
+        done
+    } & 
+}
+
+# function for setting bing wallpaper
+function bing_bg(){
+    day=$1
+    download_or_not=$2
+    timeout 1 ping -c 1 -q www.bing.com &>/dev/null && {
+        urls=`curl -s "${api}" |jq '[.data.images[] | .imageUrls | .landscape | .wallpaper]'`
+        url=`echo $urls |jq ".[${day}]" |tr -d '"'`
+        link="https://www.bing.com${url}"
+        wallpaper_name=`echo ${link} |cut -d. -f4 |cut -d_ -f1`
+        [[ ${download_or_not} == "download" ]] && {
+            {
+                wget ${link} -P ${tmp_dir} &>/dev/null && {
+                    mv /tmp/*${wallpaper_name}* /tmp/${wallpaper_name}.jpg
+                    mv /tmp/${wallpaper_name}.jpg ${default_dir}
+                    notify "download ${wallpaper_name} to ${default_dir}"
+                }
+            } || notify "download error!"
+        }
+    } 
+    feh --no-fehbg --bg-scale ${link}
+}
+
+# function for help message
+function exit_with_help(){
+    echo "parameter error! try:
+    wallpaper static /file/location
+    wallpaper dynamic /folder/location
+    wallpaper bing
+    wallpaper bing 0~6
+    wallpaper bing 0~6 download"
+    exit 1
+}
+
+# choose which methods to use
+[[ ${method} != "" ]] && {
+    [[ ${location} != "" ]] && {
+        if [ ${method} == "static" ];then
+            no_backend
+            static_bg ${location}
+        elif [ ${method} == "dynamic" ];then
+            no_backend
+            dynamic_bg ${location}
+        elif [ ${method} == "bing" ];then
+            no_backend
+            bing_bg ${location} ${download_or_not}
+        fi
+    } || exit_with_help
+} || exit_with_help

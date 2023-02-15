@@ -1,0 +1,17 @@
+#!/bin/dash
+
+# receive sentense and remove return character
+query=$( echo $@ |tr -d '#\n' )
+[ -z "$query" ] && exit 0
+
+# use api to read
+mpv --really-quiet --volume=60 http://dict.youdao.com/dictvoice\?audio\="${query}" &>/dev/null  &
+
+# use api to query translate result
+data=$( timeout 4 curl -s -X POST -d "q=${query}" https://aidemo.youdao.com/trans )
+
+# use jq to find final result
+result=$( echo $data |jq '.translation' |jq '.[]' )
+
+# send result to dunst
+dunstify "$result"

@@ -1,0 +1,16 @@
+# search engine
+duckduckgo|www.duckduckgo.com/?q=
+google|www.google.com/search?q=
+youtube|www.youtube.com/results?search_query=
+wikipedia|https://en.wikipedia.org/wiki/
+archlinux wiki|wiki.archlinux.org/title/
+bing|www.bing.com/search?q=
+github|www.github.com/search?q=
+bilibili|search.bilibili.com/all?keyword=
+
+# bookmark
+music.163.com/#/my|
+ssfwshutterbug.github.io|
+ulomo.github.io|
+hackage.haskell.org/package/xmonad-contrib|
+192.168.199.1|

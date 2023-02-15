@@ -1,0 +1,37 @@
+#!/usr/bin/dash
+#                          _       _          __ _           __           
+#  ___  ___  __ _ _ __ ___| |__   (_)_ __    / _(_)_ __ ___ / _| _____  __
+# / __|/ _ \/ _` | '__/ __| '_ \  | | '_ \  | |_| | '__/ _ \ |_ / _ \ \/ /
+# \__ \  __/ (_| | | | (__| | | | | | | | | |  _| | | |  __/  _| (_) >  < 
+# |___/\___|\__,_|_|  \___|_| |_| |_|_| |_| |_| |_|_|  \___|_|  \___/_/\_\
+# this script uses dmenu to display search engine and bookmark
+# if choose engine, then we type what we need to search
+# if choose bookmark, then open bookmark directly.
+
+# define variables
+FILE="${HOME}/.local/bin/url-list"
+PROMPT1="search engine:"
+PROMPT2="search about:"
+FONT="CaskaydiaCove Nerd FONT Mono:pixelsize=22"
+LINE=15
+
+# get engine/bookmark info, if null then exit
+engine=$(rg -v '^#' $FILE \
+	|cut -d'|' -f1 \
+	|dmenu -i -l "$LINE" -fn "$FONT" -p "$PROMPT1"
+	)
+[ -z "$engine" ] && exit 0
+
+# get link info, if null then exit
+link=$(rg $engine $FILE \
+	|cut -d'|' -f2
+	)
+[ -z "$link" ] && firefox --search --new-tab $engine && exit 0
+
+# get search info
+search=$(dmenu -fn "$FONT" -p "$PROMPT2")
+search=$(echo $search |tr " " +)
+[ -z "$search" ] && exit 0
+
+# use firefox to search link
+which firefox && firefox --search --new-tab ${link}${search}

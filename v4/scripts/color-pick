@@ -1,0 +1,14 @@
+#!/bin/dash
+
+#            _                    _      _             
+#   ___ ___ | | ___  _ __   _ __ (_) ___| | _____ _ __ 
+#  / __/ _ \| |/ _ \| '__| | '_ \| |/ __| |/ / _ \ '__|
+# | (_| (_) | | (_) | |    | |_) | | (__|   <  __/ |   
+#  \___\___/|_|\___/|_|    | .__/|_|\___|_|\_\___|_|   
+#                          |_|                         
+
+
+xcolor |tr -d '\n' | \
+	xclip -sel primary && \
+	dunstify 'color stores in primary clipboard
+		  use shift+insert to paste!'

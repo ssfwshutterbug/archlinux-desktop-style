@@ -1,0 +1,203 @@
+#!/usr/bin/zsh
+#  __ _ _                            
+# / _(_) | ___  ___ _   _ _ __   ___ 
+#| |_| | |/ _ \/ __| | | | '_ \ / __|
+#|  _| | |  __/\__ \ |_| | | | | (__ 
+#|_| |_|_|\___||___/\__, |_| |_|\___|
+#                   |___/            
+#
+# the script can do two things:
+# 1. copy configure file to the new system, simplify the system install.
+# 2. sync configured system file, make a backup of some important configuration.
+
+
+# define backup directory. it can also be specified by input
+destination=~/Public/linux
+
+# define configuration file need to be backup. started with "origion"
+# user settings
+origion_dunst=~/.config/dunst
+origion_picom=~/.config/picom
+origion_go_env=~/.config/go/env
+origion_pipconf=~/.config/pip
+origion_psd=~/.config/psd
+origion_cursor_theme1=~/.config/gtk-3.0
+origion_xmobar=~/.config/xmobar
+origion_ranger=~/.config/ranger
+origion_polybar=~/.config/polybar
+origion_gimp=~/.config/GIMP
+origion_fontconf=~/.config/fontconfig
+origion_localfont=~/.local/share/fonts
+origion_vim=~/.vim
+origion_vimcfg=~/.vimrc
+origion_nvimcfg=~/.config/nvim
+origion_zsh=~/.config/zsh/.oh-my-zsh
+origion_zshcfg=~/.config/zsh/.zshrc
+origion_xinit=~/.xinitrc
+origion_Xresource=~/.Xresources
+origion_Xmodmap=~/.Xmodmap
+origion_xmonad=~/.xmonad/xmonad.hs
+origion_pam=~/.pam_environment
+origion_zprofile=~/.zprofile
+origion_note=~/Public/note
+origion_img=~/Pictures/
+origion_sound=~/Public/sound
+origion_cursor_theme3=~/.icons
+origion_cursor_theme2=~/.themes
+origion_cmd=~/.local/bin
+origion_apps=~/.local/apps
+origion_pythonlib=~/.local/lib/python3.9
+
+# system settings
+origion_profile=/etc/profile
+origion_paconf=/etc/pacman.conf
+origion_fstab=/etc/fstab
+#origion_dock=/etc/docker/daemon.json
+#origion_hosts=/etc/hosts
+#origion_asd=/etc/asd.conf
+
+# specify some file/folder don't need to compare such as app
+#needless_cmp=( $origion_apps  $origion_cursor_theme3 $origion_cursor_theme2 )
+needless_cmp=( $origion_apps )
+
+
+
+
+# remove none used messages
+exec 4>&1
+exec 1>/dev/null
+
+# function to write stdout info and dunst info
+function log(){
+    exec 1>&4
+    if [ $# -gt 0 ];then
+        level=$1
+        info=$2
+        echo "[$(date '+%F %H:%M')] :: $info"
+        if [ -f ~/Public/sound/background.wav ];then
+            [ `which mpv` ] &>/dev/null && mpv  ~/Public/sound/background.wav &>/dev/null
+        fi
+        [ `which dunstify` ] &>/dev/null  && dunstify -u ${level} "[$(date '+%F %H:%M')] :: $info"
+    fi
+    exec 1>/dev/null
+    unset info
+}
+
+# we need to replace relative path with absolute path and add them to a list
+declare -a all_file
+i=1
+user=`whoami`
+script=$0
+for f in `egrep '^origion' $script 2>/dev/null | awk -F= '{print $2}'`
+do
+    if echo $f | grep '~' && f=${f/\~//home/$user}
+    all_file[i]=$f
+    let i++
+done
+unset f
+unset i
+
+# used to copy configure file to the new system
+function install_file(){
+    for f in ${all_file}
+    do
+        [ ! -d `dirname $f` ] && {
+            log "low" "start making directory `dirname $f` for config install"
+            mkdir -p `dirname $f`
+            log "normal" "start copying config file $destination/`basename $f` to `dirname $f`"
+            cp -r $destination/`basename $f` `dirname $f`
+        }
+        [ -d `dirname $f` ] && {
+            log "normal" "start copying config file $destination/`basename $f` to `dirname $f`"
+            cp -r $destination/`basename $f` `dirname $f`
+        }
+    done
+    log "critical" "installed successfully"
+}
+
+# used to remove installed configure file
+function remove_file(){
+    for f in ${all_file}
+    do
+        [[ -d $f || -f $f ]] && rm -rf $destination
+    done
+    log "critical" "removed successfully"
+}
+
+# with syncing, check whether the file which need to be backed up exists or not
+function check_ori_exist(){
+    for f in ${all_file}
+    do
+        [[ ! -d $f && ! -f $f ]] && log "critical" "origional $f not exist,please check"
+    done
+    unset f
+}
+
+# with installing, check whether the backup directory exists or not
+function check_dec_exist(){
+    [ ! -d $destination ] && log "critical" "$destination directory not available,please check && exit"
+}
+
+# with syncing, check whether the file is the same, if not cp file to backup directory.
+function diff_compire(){
+    for f in ${all_file}
+    do
+        if [[ -d ${destination}/`basename ${f}` || -f ${destination}/`basename ${f}` ]];then
+            flag=1
+            for i in $needless_cmp
+            do
+                if [[ `basename ${f}` != `echo ${i##*/}` ]];then
+                    flag=1
+                else
+                    flag=0
+                    break
+                fi
+            done
+            if [[ $flag == 1 ]];then
+                diff -r $f ${destination}/`basename ${f}` 2>/dev/null
+                [ $? -ne 0 ] && rm -rf ${destination}/`basename ${f}` && {
+                    cp -rup $f ${destination} 2>/dev/null
+                    log "low" "updated $f"
+                }
+            fi
+        else
+            [[ -d $f || -f $f  ]] && {
+                cp -rup $f ${destination} 2>/dev/null
+                #log "critical" "updated $f"
+                log "critical" "new file: $f added to $destination"
+            }
+        fi
+    done
+    unset f
+}
+
+# use rsync instead of manual writing
+#function diff_compire(){
+#    for f in ${all_file}
+#    do
+#        rsync -a --delete $f $destination
+#    done
+#}
+
+# though parameter to choose install or define variable
+if [ $# -eq 1 ];then
+    if [ -d $1 ] ;then
+        destination=$1
+    elif [[ $1 == "install" ]];then
+        install_file
+        exit
+    elif [[ $1 == "remove" ]];then
+        remove_file
+        exit
+    else
+        log "critical" "location specified is wrong,please check again!"
+        exit
+    fi
+elif [ $# -eq 0 ];then
+    check_ori_exist
+    check_dec_exist
+    diff_compire
+fi
+
+unset -v destination origional user all_file script
+unset -f log check_ori_exist check_dec_exist diff_compire

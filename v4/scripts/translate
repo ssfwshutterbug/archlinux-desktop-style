@@ -1,0 +1,27 @@
+#!/bin/bash
+# _                       _       _       
+#| |_ _ __ __ _ _ __  ___| | __ _| |_ ___ 
+#| __| '__/ _` | '_ \/ __| |/ _` | __/ _ \
+#| |_| | | (_| | | | \__ \ | (_| | ||  __/
+# \__|_|  \__,_|_| |_|___/_|\__,_|\__\___|
+
+
+# remove line ending, join multi line into one line
+sentense=`echo ${@} |tr -d '\n'`
+
+# read words online
+mpv --volume=60 http://dict.youdao.com/dictvoice\?audio\="${sentense}" &>/dev/null  &
+
+
+# if only one word, then use ydcv, since it can show more translate result
+# if more than one word, then use crow, since it's translation is much better
+#length=$(echo $sentense |wc -w)
+#
+#if [ $length -eq 1 ];then
+#    ydcv -n -t 5 "$sentense"
+#elif [ $length -gt 1 ];then
+#    dunstify "`crow -t zh-CN -e lingva -b "$sentense"`"
+#fi
+
+dunstify "`crow -t zh-CN -e lingva -b "$sentense"`"
+

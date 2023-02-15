@@ -1,0 +1,4 @@
+#!/bin/bash
+
+Xvfb :1 &
+[ -d /usr/lib/pentablet ] && ! pgrep pentablet && DISPLAY=:1 /usr/lib/pentablet/pentablet.sh

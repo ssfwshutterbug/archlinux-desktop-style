@@ -1,0 +1,12 @@
+#!/bin/dash
+
+
+while true
+do
+	cpu=$( top -bn1 |rg "Cpu"  |awk -F, '{print $4}' |awk '{print 100 - $1"%"}' )
+	mem=$( free -h |rg Mem |awk '{print $3"/"$2}' )
+	volume=$( amixer sget Master |tail -n1 |awk '{print $4}' )
+	time=$( date +%R )
+	xsetroot -name "  CPU: [$cpu]   MEM: [$mem]   VOL: $volume   TIME: [$time]"
+	sleep 5
+done

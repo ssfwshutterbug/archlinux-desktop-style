@@ -1,0 +1,15 @@
+#!/bin/dash
+
+# adjust volume with amixer command
+# valid operater is + or -
+OPERATE=$1
+VOLUME=5
+CURRENT=$(amixer sget Master |rg  % |cut -d'%' -f1 |cut -d'[' -f2)
+NEWVOL=$(( $CURRENT $OPERATE $VOLUME ))
+
+amixer sset Master ${VOLUME}${OPERATE} &>/dev/null && 
+	notify-send -h string:frcolor:#d5cecb \
+		    -h int:value:"$NEWVOL" \
+		    -h string:x-dunst-stack-tag:volume \
+		    "sound volume: ${NEWVOL}%" \
+		    -t 1000 

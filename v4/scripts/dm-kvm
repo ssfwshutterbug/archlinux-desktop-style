@@ -1,0 +1,41 @@
+#!/usr/bin/dash
+
+#          m                    m           #                   
+#  mmm   mm#mm   mmm    m mm  mm#mm         #   m  m   m  mmmmm 
+# #   "    #    "   #   #"  "   #           # m"   "m m"  # # # 
+#  """m    #    m"""#   #       #           #"#     #m#   # # # 
+# "mmm"    "mm  "mm"#   #       "mm         #  "m    #    # # # 
+#
+# this script used to choose kvm image to start 
+# via dmenu
+
+# define variables
+FONT="CaskaydiaCove Nerd FONT Mono:pixelsize=22"
+PROMPT1="start kvm:"
+PROMPT2="cpu thread:"
+LINE=15
+IMAGE_LOCATION="$HOME/public/kvm/"
+
+# get image name, if null then exit
+img=$(ls $IMAGE_LOCATION \
+	|cut -d. -f1 \
+	|dmenu -i -l "$LINE" -p "$PROMPT1" -fn "$FONT"
+	)
+[ -z $img ] && exit 0
+img_path=$(ls ${IMAGE_LOCATION}${img}*)
+
+# choose memory size
+thread=$(echo "2\n4\n6\n8\n10" \
+	|dmenu -l "$LINE" -p "$PROMPT2" -fn "$FONT"
+	)
+[ -z $thread ] && exit 0
+
+# start kvm, make sure libvirtd service already up
+qemu-system-x86_64 -drive file=$img_path \
+-enable-kvm \
+-cpu host -smp $thread \
+-m 8G \
+-vga virtio \
+-display gtk,gl=on,full-screen=on \
+-device intel-hda \
+-device hda-duplex &

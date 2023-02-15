@@ -1,0 +1,121 @@
+#!/bin/dash
+# this shell script use dmenu to do some choices
+# convenient for memorising or quick searching.
+
+
+USE_FILE="/var/db/repos/gentoo/profiles/use.desc"
+FONT="CaskaydiaCove Nerd FONT Mono:pixelsize=22"
+PROMPT2="search about:"
+
+# engine link
+DUCKDUCKGO='www.duckduckgo.com/?q='
+YOUTUBE='www.youtube.com/results?search_query='
+WIKIPEDIA='https://en.wikipedia.org/wiki/'
+ARCHWIKI='wiki.archlinux.org/title/'
+GITHUB='www.github.com/search?q='
+BILIBILI='search.bilibili.com/all?keyword='
+GENTOOPKG='https://packages.gentoo.org/packages/search?q='
+GENTOOWIKI='https://wiki.gentoo.org/index.php?title=Special%3ASearch&search='
+
+item=$(echo "\
+	!translate
+	!layout change
+	!use flag
+	!wikipedia
+	!arch wiki
+	!gentoo package
+	!gentoo wiki
+	!youtube
+	!duckduckgo
+" |dmenu -l 10 -fn "$FONT" -p ">>>>>" |tr -d '\t')
+
+get_input () {
+	echo |dmenu -fn "$FONT"
+}
+
+get_layout () {
+	echo "\
+	!Accordion
+	!Cross
+	!PSF
+	!ThreeCol
+	!OneBig
+	!ResizableTall
+	!Grid
+	!Mirror
+	!Tabled
+	" |dmenu -l 10 -fn "$FONT" -p ">>>>>" |tr -d '\t'
+}
+
+change_layout () {
+	layout=$( get_layout )
+	case $layout in 
+		"!Accordion")
+			xdotool key super+a key a
+			;;
+		"!Cross")
+			xdotool key super+a key c
+			;;
+		"!PSF")
+			xdotool key super+a key p
+			;;
+		"!ThreeCol")
+			xdotool key super+a key t
+			;;
+		"!OneBig")
+			xdotool key super+a key o
+			;;
+		"!ResizableTall")
+			xdotool key super+a key r
+			;;
+		"!Grid")
+			xdotool key super+a key g
+			;;
+		"!Mirror")
+			xdotool key super+a key m
+			;;
+		"!Tabled")
+			xdotool key super+a key b
+			;;
+		"*")
+			;;
+	esac
+}
+
+case $item in
+	"!translate")
+		new-translate "$( echo |dmenu -p "translate::" -fn "$FONT" )"
+		;;
+	"!use flag")
+		cat $USE_FILE | dmenu -l 10 -fn "$FONT"
+		;;
+	"!arch wiki")
+		search="$( get_input )"
+		firefox-bin --search --new-tab "${ARCHWIKI}${search}"
+		;;	
+	"!gentoo package")
+		search="$( get_input )"
+		firefox-bin --search --new-tab "${GENTOOPKG}${search}"
+		;;	
+	"!gentoo wiki")
+		search="$( get_input )"
+		firefox-bin --search --new-tab "${GENTOOWIKI}${search}"
+		;;	
+	"!youtube")
+		search="$( get_input )"
+		firefox-bin --search --new-tab "${YOUTUBE}${search}"
+		;;	
+	"!duckduckgo")
+		search="$( get_input )"
+		firefox-bin --search --new-tab "${DUCKDUCKGO}${search}"
+		;;	
+	"!wikipedia")
+		search="$( get_input )"
+		firefox-bin --search --new-tab "${WIKIPEDIA}${search}"
+		;;	
+	"!layout change")
+		change_layout
+		;;	
+	"*")
+		;;	
+esac
