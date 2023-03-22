@@ -1,0 +1,34 @@
+Config { font    = "xft:JetBrainsMono Nerd Font:pixelsize=16"
+        , additionalFonts = [ "xft:JetBrainsMono Nerd Font:pixelsize=16" 
+                            , "xft:WenQuanYi Micro Hei Mono:pixelsize=14" ]
+        , bgColor = "#0f0f12"
+        , fgColor = "#292e42"
+        , alpha = 255
+        , position = Static { xpos = 0, ypos = 0, width = 2560, height = 26 }
+        --, position = Static { xpos = 12, ypos = 6, width = 2536, height = 22 }
+        --, position = Static { xpos = 0, ypos = 0, width = 1920, height = 20 }
+        , border = BottomB
+        , borderColor = "#292e42"
+        , borderWidth = 0
+        , lowerOnStart = True
+        , hideOnStart = False
+        , allDesktops = True
+        , persistent = False
+        , sepChar = "%"
+        , alignSep = "}{"
+        , template = "%UnsafeStdinReader%}{<fc=#f84d88,#0f0f12>%locks%</fc> %enp7s0% //%cpu% //<fc=#999999,#0f0f12>G: %gpu%</fc> //%memory% //<fc=#999999,#0f0f12>V: %volume%</fc> //%date% %time%"
+        , commands = [
+                    Run Date "<fc=#999999,#292e42> %H:%M </fc>" "time" 600
+                    , Run Date "<fc=#999999,#0f0f12>%B %d %Y</fc>" "date" 360000
+                    , Run Network "enp7s0" ["-t", "<fc=#999999,#0f0f12> <fn=1></fn> <rx>kb  <fn=1></fn> <tx>kb </fc>"] 60
+                    , Run Cpu ["-t", "<fc=#999999,#0f0f12>C: <total>%</fc>"] 120
+                    , Run Memory ["-t", "<fc=#999999,#0f0f12>M: <used>M</fc>"] 20
+                    , Run Com "/home/mandalorian/.config/xmobar/volume" [] "volume" 10
+                    , Run Com "/home/mandalorian/.config/xmobar/gpu_info" [] "gpu" 30
+                    , Run UnsafeStdinReader
+                    , Run Locks
+                    ]
+}
+
+        --white--
+        --, template = "<action=`dunstify -u critical $(cdate)`><fc=#373b41,#8e7cc3>  %datet%  </fc></action><fn=1>%UnsafeStdinReader%</fn> }{<fc=#70788d,#e6e7ea> %enp7s0% </fc> <fc=#70788d,#e6e7ea> %cpu% </fc> <fc=#70788d,#e6e7ea> %memory% </fc> <action=`pamixer -t`><fc=#70788d,#e6e7ea>   %volume% </fc></action> <fc=#70788d,#e6e7ea> %dated%</fc><fc=#373b41,#8e7cc3><fn=2>  </fn></fc>" }
