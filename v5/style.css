@@ -1,0 +1,194 @@
+* {
+    border: none;
+    border-radius: 0;
+    /* `otf-font-awesome` is required to be installed for icons */
+    font-family: CaskaydiaCove Nerd Font,FontAwesome;
+    font-size: 12px;
+    min-height: 18px;
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 0;
+}
+
+window#waybar {
+    background: transparent;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+#workspaces {
+	margin: 0px 3px 0px 3px;
+	padding: 0px 8px 0px 8px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+#workspaces button {
+	margin: 4px 3px 4px 3px;
+	padding: 0px 0px 0px 0px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    background-color: rgba(142, 142, 142, 0.8);
+	border: 1px solid #8e8e8e;
+}
+
+#workspaces button.active {
+	margin: 4px 3px 4px 3px;
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    background-color: rgba(104, 53, 186, 0.8);
+    /*background-color: rgba(176, 219, 89, 0.8);*/
+	border: 1px solid #6835ba;
+}
+
+#window {
+	margin: 0px 3px 0px 3px;
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+#keyboard-state {
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+#clock {
+	margin: 0px 3px 0px 0px;
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+#custom-volume {
+	margin: 0px 3px 0px 3px;
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+#network {
+	margin: 0px 3px 0px 3px;
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+#cpu {
+	margin: 0px 3px 0px 3px;
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+#memory {
+	margin: 0px 3px 0px 3px;
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+#temperature {
+    margin-right: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 10px;
+    transition: none;
+    color: #ffffff;
+    background: #B48EAD;
+}
+
+#temperature.critical {
+    background-color: #eb4d4b;
+}
+
+#battery {
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+#battery.charging {
+    color: #ffffff;
+    background-color: #26A65B;
+}
+
+#battery.warning:not(.charging) {
+    background-color: #ffbe61;
+    color: black;
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f53c3c;
+    color: #ffffff;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#custom-weather {
+	margin: 0px 3px 0px 3px;
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+#tray {
+	margin: 0px 3px 0px 3px;
+	padding: 0px 16px 0px 16px;
+    border-radius: 10px 10px 10px 10px;
+    transition: none;
+    color: #cccccc;
+    background-color: rgba(48, 42, 58, 0.8);
+	border: 1px solid #572d9b;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}

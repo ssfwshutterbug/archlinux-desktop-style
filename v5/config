@@ -1,0 +1,102 @@
+{
+    "layer": "bottom", // Waybar at top layer
+    "position": "top", // Waybar position (top|bottom|left|right)
+    "margin": "5 5 7 5",
+    "height": 22, // Waybar height (to be removed for auto height)
+    // "width": 1280, // Waybar width
+    "modules-left": ["clock", "custom/weather",  "hyprland/window"],
+    "modules-center": ["hyprland/workspaces"],
+    "modules-right": ["network", "cpu", "memory", "custom/volume",  "tray"],
+
+
+    //***************************
+    //*  Modules configuration  *
+    //***************************
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        "format-icons": {
+            "": "",
+            "": "",
+            "": "",
+            "": "",
+            "": "",
+            "urgent": "",
+            "active": "",
+            "default": ""
+        },
+        "sort-by-number": true
+    },
+
+    "hyprland/window": {
+        "format": "👉 {title}",
+        "rewrite": {
+            "(.*) — Mozilla Firefox": "🌎 $1"
+        },
+        "separate-outputs": true
+    },
+
+    "clock": {
+        // "timezone": "America/New_York",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": "{:%a, %d %b, %I:%M %p}"
+    },
+
+    "custom/weather": {
+        "format": "{}",
+        "tooltip": true,
+        "interval": 1800,
+        "exec": "$HOME/.config/waybar/scripts/getwea.sh",
+        "return-type": "newline"
+    },
+
+    "custom/volume": {
+        "format": "{} 墳",
+        "tooltip": true,
+        "interval": 1,
+        "exec": "$HOME/.config/waybar/scripts/volume",
+    },
+
+    "network": {
+        "interface": "enp7s0",
+        "format-ethernet": " {bandwidthDownBytes}  {bandwidthUpBytes} 󰊗",
+        "format-disconnected": "", //An empty format will hide the module.
+        "interval": 1
+    },
+
+    "cpu": {
+        "interval": 1,
+        "format": "{icon0}{icon1}{icon2}{icon3}{icon4}{icon5}{icon6}{icon7}",
+        "format-icons": [
+        "<span color='#40A29D'>▁</span>", // green
+        "<span color='#2aa9ff'>▂</span>", // blue
+        "<span color='#f8f8f2'>▃</span>", // white
+        "<span color='#f8f8f2'>▄</span>", // white
+        "<span color='#ffffa5'>▅</span>", // yellow
+        "<span color='#ffffa5'>▆</span>", // yellow
+        "<span color='#ff9977'>▇</span>", // orange
+        "<span color='#dd532e'>█</span>"  // red
+        ]
+    },
+
+    "memory": {
+        "interval": 30,
+        "format": "{used:0.1f}G/{total:0.1f}G "
+    },
+
+//    "temperature": {
+//        // "thermal-zone": 2,
+//        "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+//        "critical-threshold": 80,
+//        // "format-critical": "{temperatureC}°C {icon}",
+//        "format": "{temperatureC}°C {icon}",
+//        "format-icons": ["", "", "", "", ""],
+//        "tooltip": false,
+//    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 10
+    },
+}
